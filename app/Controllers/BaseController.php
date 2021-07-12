@@ -33,7 +33,31 @@ class BaseController extends Controller
 	 */
 	public function initController(\CodeIgniter\HTTP\RequestInterface $request, \CodeIgniter\HTTP\ResponseInterface $response, \Psr\Log\LoggerInterface $logger)
 	{
-		// Do Not Edit This Line
+
+		//echo "Hola controller ";
+
+		$currentUriAux = current_url(true);
+		//echo $currentUriAux->getScheme();
+
+		$currentUriString = $currentUriAux->getScheme()."://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+		//echo $currentUriString;
+
+		//$uri = service('uri',$currentUriAux);
+		$uri = new \CodeIgniter\HTTP\URI($currentUriString);
+
+		//echo $uri->getTotalSegments();
+
+		for ($i=0; $i <= $uri->getTotalSegments(); $i++) { 
+			if($uri->getSegment($i) == "index.php"){
+				
+				$uriFinal = str_replace("index.php/","",$uri);
+				$uriFinal = str_replace("index.php","",$uriFinal);
+
+				header("Location: $uriFinal");
+				exit();
+			}
+		}
+
 		parent::initController($request, $response, $logger);
 
 		//--------------------------------------------------------------------
